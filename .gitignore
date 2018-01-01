@@ -17,6 +17,6 @@ logs
 bin
 .vscode
 pkg
-# src
-# !src/fernandomitre7.com/cryptochecker
+src/*
+!src/fernandomitre7.com/cryptochecker
 
