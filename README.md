@@ -1,2 +1,2 @@
-# goapp
-Basic Standalone Go Application with logging and configuration
+# cryptochecker
+Go App to monitor Cryptocurrencies using bitso API
