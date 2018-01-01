@@ -15,11 +15,12 @@ var (
 	_logFile *os.File
 )
 
-func init() {
-	fmt.Println("Logger init")
+// Init initializes logger
+func Init(logPath string) error {
+	fmt.Println("Logger init logPath:", logPath)
 	var err error
-	if _logFile, err = os.Create("logs/cryptochecker.log"); err != nil {
-		log.Fatalln("Fail to open log file")
+	if _logFile, err = os.Create(logPath); err != nil {
+		return fmt.Errorf("Fail to open log file %v", err)
 	}
 
 	log.SetOutput(_logFile)
@@ -28,6 +29,8 @@ func init() {
 	_debug = log.New(_logFile, "[DEBUG]: ", log.LUTC|log.Ldate|log.Ltime|log.Lshortfile)
 	_warning = log.New(_logFile, "[WARN]: ", log.LUTC|log.Ldate|log.Ltime|log.Lshortfile)
 	_error = log.New(_logFile, "[ERROR]: ", log.LUTC|log.Ldate|log.Ltime|log.Lshortfile)
+
+	return nil
 }
 
 // Close is meant to be on programs shutdown to properly close log file used
@@ -35,29 +38,38 @@ func Close() {
 	_logFile.Close()
 }
 
-func Debug(format string, v ...interface{}) {
-	s := formatLog(format, v)
+func Debugf(format string, v ...interface{}) {
+	s := fmt.Sprintf(format, v...)
 	_debug.Output(2, s)
 }
 
-func Info(format string, v ...interface{}) {
-	s := formatLog(format, v)
+func Infof(format string, v ...interface{}) {
+	s := fmt.Sprintf(format, v...)
 	_info.Output(2, s)
 }
 
-func Warn(format string, v ...interface{}) {
-	s := formatLog(format, v)
+func Warnf(format string, v ...interface{}) {
+	s := fmt.Sprintf(format, v...)
 	_warning.Output(2, s)
 }
 
-func Error(format string, v ...interface{}) {
-	s := formatLog(format, v)
+func Errorf(format string, v ...interface{}) {
+	s := fmt.Sprintf(format, v...)
 	_error.Output(2, s)
 }
 
-func formatLog(format string, v ...interface{}) string {
-	if len(v) > 0 {
-		return fmt.Sprintf(format, v...)
-	}
-	return format
+func Debug(s string) {
+	_debug.Output(2, s)
+}
+
+func Info(s string) {
+	_info.Output(2, s)
+}
+
+func Warn(s string) {
+	_warning.Output(2, s)
+}
+
+func Error(s string) {
+	_error.Output(2, s)
 }

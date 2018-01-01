@@ -14,6 +14,7 @@ import (
 
 var (
 	configFile = flag.String("config", "/home/fernando/FERNANDO/cryptochecker/config/cryptochecker.conf.json", "Configuration File")
+	logFile    = flag.String("logs", "logs/cryptochecker.log", "Log file Path")
 	// Used for shutdown operations
 	killC      chan os.Signal
 	interruptC chan os.Signal
@@ -25,12 +26,18 @@ func init() {
 }
 
 func main() {
+	flag.Parse()
 	// Load Configurations
+	err := logger.Init(*logFile)
+	if err != nil {
+		panic(err)
+	}
+	logger.Info("Crypto Checker")
 	_conf, err := config.LoadConfiguration(*configFile)
 	if err != nil {
 		panic(err)
 	}
-	logger.Debug("Crypto Checker started on port %v", _conf.Port)
+	logger.Debugf("Crypto Checker started on port %v", _conf.Port)
 
 	time.Sleep(time.Second * 1)
 

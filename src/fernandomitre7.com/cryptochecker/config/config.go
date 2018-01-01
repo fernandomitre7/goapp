@@ -21,16 +21,16 @@ var (
 
 // LoadConfiguration loads project configuration from a file and from specified env vars
 func LoadConfiguration(filePath string) (conf *Configuration, err error) {
+	logger.Debugf("Loading Config file: %v", filePath)
 	var file *os.File
 	if file, err = os.Open(filePath); err != nil {
-		logger.Error("Error openning config file %s: %v", filePath, err.Error())
+		logger.Errorf("Error openning config file %s: %v", filePath, err.Error())
 		return nil, err
 	}
 	defer file.Close()
-
 	decoder := json.NewDecoder(file)
 	if err = decoder.Decode(&conf); err != nil {
-		logger.Error("Error decoding config file %v", err.Error())
+		logger.Errorf("Error decoding config file %v", err.Error())
 		return nil, err
 	}
 	_conf = conf
